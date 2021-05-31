@@ -33,12 +33,21 @@ class Fcm extends Gcm
         $headers = $this->addRequestHeaders();
         $data = $this->buildData($topic, $message, $isCondition);
 
+        $timeout = 10;
+        if(isset($this->config['timeout'])) {
+            if($this->config['timeout']){
+                $timeout = $this->config['timeout'];
+            }
+        }
+
         try {
             $result = $this->client->post(
                 $this->url,
                 [
                     'headers' => $headers,
                     'json' => $data,
+                    'timeout' => $timeout, // Response timeout
+                    'connect_timeout' => $timeout, // Connection timeout
                 ]
             );
 

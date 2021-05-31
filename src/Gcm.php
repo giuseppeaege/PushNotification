@@ -29,7 +29,7 @@ class Gcm extends PushService implements PushServiceInterface
     public function __construct()
     {
         $this->url = 'https://android.googleapis.com/gcm/send';
-        
+
         $this->config = $this->initializeConfig('gcm');
         $this->client = new Client;
     }
@@ -139,12 +139,21 @@ class Gcm extends PushService implements PushServiceInterface
         $fields = $this->addRequestFields($deviceTokens, $message);
         $headers = $this->addRequestHeaders();
 
+        $timeout = 10;
+        if(isset($this->config['timeout'])) {
+            if($this->config['timeout']){
+                $timeout = $this->config['timeout'];
+            }
+        }
+
         try {
             $result = $this->client->post(
                 $this->url,
                 [
                     'headers' => $headers,
                     'json' => $fields,
+                    'timeout' => $timeout, // Response timeout
+                    'connect_timeout' => $timeout, // Connection timeout
                 ]
             );
 
@@ -156,7 +165,7 @@ class Gcm extends PushService implements PushServiceInterface
 
         } catch (\Exception $e) {
             $response = ['success' => false, 'error' => $e->getMessage()];
-            
+
             $this->setFeedback(json_decode(json_encode($response)));
 
             return $this->feedback;

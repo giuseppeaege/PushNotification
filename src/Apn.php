@@ -243,6 +243,12 @@ class Apn extends PushService implements PushServiceInterface
     private function openConnectionAPNS($ctx)
     {
         $fp = false;
+        $timeout = 10;
+        if(isset($this->config['timeout'])) {
+            if($this->config['timeout']){
+                $timeout = $this->config['timeout'];
+            }
+        }
 
         // Open a connection to the APNS server
         try {
@@ -250,7 +256,7 @@ class Apn extends PushService implements PushServiceInterface
                 $this->url,
                 $err,
                 $errstr,
-                60,
+                $timeout,
                 STREAM_CLIENT_CONNECT|STREAM_CLIENT_PERSISTENT,
                 $ctx
             );
@@ -378,9 +384,16 @@ class Apn extends PushService implements PushServiceInterface
         //connect to the APNS feedback servers
         $ctx = $this->composeStreamSocket();
 
+        $timeout = 10;
+        if(isset($this->config['timeout'])) {
+            if($this->config['timeout']){
+                $timeout = $this->config['timeout'];
+            }
+        }
+
         // Open a connection to the APNS server
         try {
-            $apns = stream_socket_client($this->feedbackUrl, $errcode, $errstr, 60, STREAM_CLIENT_CONNECT, $ctx);
+            $apns = stream_socket_client($this->feedbackUrl, $errcode, $errstr, $timeout, STREAM_CLIENT_CONNECT, $ctx);
 
             //Read the data on the connection:
             while (!feof($apns)) {
