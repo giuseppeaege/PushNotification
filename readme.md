@@ -11,6 +11,7 @@ This is an easy to use package to send push notification.
 
 * GCM
 * FCM
+* FCMV1
 * APN
 * More Push Service Providers coming soon.
 
@@ -80,6 +81,28 @@ $push->setConfig([
 ]);
 ```
 
+The default configuration parameters for **FCMV1** are :
+
+*   ```priority => 'normal'```
+*   ```dry_run => false```
+*   ```projectId => 'my-project-id'```
+*   ```jsonFile => __DIR__ . '/fcmCertificates/file.json'```
+
+You can dynamically update those values or adding new ones calling the method setConfig like so:
+```php
+$push->setConfig([
+    'priority' => 'high',
+    'projectId' => 'my-real-project-id',
+    'jsonFile' => 'path/to/credentials.json'
+]);
+```
+
+To generate a credentials json file for your service account:
+
+*   In the Firebase console, open **Settings** > [Service Accounts](https://console.firebase.google.com/project/_/settings/serviceaccounts/adminsdk).
+*   Click **Generate New Private Key**, then confirm by clicking **Generate Key**.
+*   Securely store the JSON file containing the key.
+
 
 The default configuration parameters for **APN** are:
 
@@ -138,7 +161,12 @@ For FCM Service:
 $push = new PushNotification('fcm');
 ```
 
-Now you may use any method what you need. Please see the API List.
+For FCMV1 Service:
+```php
+$push = new PushNotification('fcmv1');
+```
+
+Now you may use any method that you need. Please see the API List.
 
 
 ## API List
@@ -162,6 +190,11 @@ Now you may use any method what you need. Please see the API List.
 
 > Go to [Usage samples](https://github.com/edujugon/PushNotification#usage-samples) directly.
 
+# Only for Fcmv1
+
+- [setProjectId](https://github.com/edujugon/PushNotification#setprojectid)
+- [setJsonFile](https://github.com/edujugon/PushNotification#setjsonfile)
+
 #### setService
 
 `setService` method sets the push service to be used, which you pass the name through parameter as string.
@@ -175,6 +208,28 @@ object setService($name)
 #### setMessage
 
 `setMessage` method sets the message parameters, which you pass the values through parameter as array.
+
+#### setProjectId
+
+> Only for fcmv1
+`setProjectId` method sets the Project ID of your App as a string.
+
+**Syntax**
+
+```php
+object setProjectId($project_id)
+```
+
+#### setJsonFile
+
+> Only for fcmv1
+`setJsonFile` method sets the path of credentials json file of your App.
+
+**Syntax**
+
+```php
+object setJsonFile($api_key)
+```
 
 **Syntax**
 
